@@ -1,0 +1,27 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: bpls_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: bpls_root_pass
+      MYSQL_DATABASE: bpls_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - bpls_mysql_data:/var/lib/mysql
+      - ./server/sql:/docker-entrypoint-initdb.d
+
+  phpmyadmin:
+      image: phpmyadmin:latest
+      container_name: bpls_phpmyadmin
+      restart: unless-stopped
+      environment:
+        PMA_HOST: mysql
+      ports:
+        - "8081:80"
+      depends_on:
+        - mysql
+
+volumes:
+  bpls_mysql_data:
